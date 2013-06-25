@@ -1,0 +1,45 @@
+<html>
+<head>
+  <title>Disney Fuzzy Search Example</title>
+  <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+  <script src="fuzzy.js"></script>
+  <script type="text/javascript">
+    function search(tuts) {
+      var search = $('#search').val();
+      var options = {
+          pre: "<b>"
+        , post: "</b>"
+        , extract: function(el) { return el.name + '`' + el.company; }
+      }
+      var filtered = fuzzy.filter(search, tuts, options);
+      // process the results to extract the strings
+      var newCharacters = filtered.map(function(el) {
+        console.log(el);
+        var matchedtut = (el.string).split('`');
+        return '<li>' + matchedtut[0] + ' by ' + matchedtut[1] + '</li>';
+      });
+
+      $('#characters').html(newCharacters.join(''));
+    }
+
+    $.getJSON('http://hitherto/collection/tuts/json', start);
+
+    function start(data) {
+      $('#search').on('keyup', function(){
+        if($('#search').val() != "")
+        {
+          search(data);
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+  <h1>Search Disney Characters</h1>
+  <input type="text" id="search" class="search"></input>
+  <ul id="characters">
+  </ul>
+</body>
+</html>
